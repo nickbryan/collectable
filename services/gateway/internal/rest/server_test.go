@@ -99,7 +99,7 @@ func TestServer(t *testing.T) {
 				Route: func(r *mux.Route) {
 					r.Path("/existing/route").Methods(http.MethodGet)
 				},
-				Action: func(res Responder, _ *http.Request) {
+				Action: func(res Responder, req *Request) {
 					*called = true
 					res.Respond(http.StatusNoContent)
 				},

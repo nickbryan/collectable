@@ -13,7 +13,7 @@ type Claims struct {
 	AuthID uuid.UUID
 }
 
-func NewToken(authID uuid.UUID) (string, error) {
+func NewSignedString(authID uuid.UUID) (string, error) {
 	return jwt.NewWithClaims(jwt.SigningMethodHS256, Claims{
 		AuthID: authID,
 	}).SignedString(token)

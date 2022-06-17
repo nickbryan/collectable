@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 
 	"github.com/nickbryan/collectable/services/gateway/internal/rest"
 	"github.com/nickbryan/collectable/services/gateway/internal/rest/token"

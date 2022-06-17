@@ -1,13 +1,15 @@
 package token
 
 import (
-	"go.uber.org/zap"
 	"net/http"
 
 	"github.com/gorilla/mux"
+	"go.uber.org/zap"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 
+	"github.com/nickbryan/collectable/proto/iam/token/service/v1"
 	"github.com/nickbryan/collectable/services/gateway/internal/rest"
-	"github.com/nickbryan/collectable/services/iam/token"
 )
 
 func NewCreateHandler(client token.TokenServiceClient, logger *zap.Logger) rest.Handler {
@@ -38,16 +40,23 @@ func NewCreateHandler(client token.TokenServiceClient, logger *zap.Logger) rest.
 				Password: request.Password,
 			})
 
-			if err != nil {
+			st, ok := status.FromError(err)
+			if !ok {
 				logger.Error("err from grpc client when calling token.CreateToken", zap.Error(err))
 				res.Respond(http.StatusInternalServerError)
 
 				return
 			}
 
-			res.Respond(http.StatusCreated).WithData(response{
-				Token: resp.Token,
-			})
+			switch st.Code() {
+			case codes.OK:
+				res.Respond(http.StatusCreated).WithData(response{Token: resp.Token})
+			case codes.NotFound:
+				res.Respond(http.StatusNotFound)
+			default:
+				logger.Error("unexpected status code from grpc se when calling token.CreateToken", zap.Error(err))
+				res.Respond(http.StatusInternalServerError)
+			}
 		},
 	}
 }

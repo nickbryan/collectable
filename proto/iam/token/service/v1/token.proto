@@ -1,7 +1,7 @@
 syntax = "proto3";
-package token;
+package proto.iam.token.service.v1;
 
-option go_package = "github.com/nickbryan/collectable/services/iam/token";
+option go_package = "github.com/nickbryan/collectable/proto/iam/token/service/v1;token";
 
 message CreateTokenRequest {
   string email = 1;

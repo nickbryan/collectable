@@ -49,7 +49,7 @@ func TestHandler(t *testing.T) {
 				Route: func(r *mux.Route) {
 					r.Path("/test").Methods(http.MethodGet)
 				},
-				Action: func(res Responder, req *http.Request) {
+				Action: func(res Responder, req *Request) {
 					panic(tc.panicArg)
 				},
 			}
