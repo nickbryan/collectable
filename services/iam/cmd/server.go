@@ -8,6 +8,7 @@ import (
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 
+	tokenService "github.com/nickbryan/collectable/proto/iam/token/service/v1"
 	"github.com/nickbryan/collectable/services/iam/token"
 )
 
@@ -33,7 +34,7 @@ var serverCmd = &cobra.Command{
 
 		server := grpc.NewServer()
 
-		token.RegisterTokenServiceServer(server, token.NewTokenService())
+		tokenService.RegisterTokenServiceServer(server, token.NewTokenService())
 
 		return server.Serve(lis)
 	},
