@@ -8,9 +8,9 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 
+	grpcToken "github.com/nickbryan/collectable/proto/iam/token/service/v1"
 	"github.com/nickbryan/collectable/services/gateway/internal/rest"
 	"github.com/nickbryan/collectable/services/gateway/internal/rest/token"
-	grpcToken "github.com/nickbryan/collectable/services/iam/token"
 )
 
 func init() {
