@@ -4,12 +4,15 @@ go 1.18
 
 require (
 	github.com/google/uuid v1.3.0
+	github.com/nickbryan/collectable/libraries/up v0.0.0-20220802073220-a60b472472f5
+	github.com/nickbryan/collectable/proto v0.0.0-20220802073220-a60b472472f5
 	github.com/spf13/cobra v1.4.0
 	go.uber.org/zap v1.21.0
 	google.golang.org/grpc v1.47.0
 )
 
 require (
+	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/inconshreveable/mousetrap v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect

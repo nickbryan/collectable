@@ -12,7 +12,7 @@ import (
 	"github.com/nickbryan/collectable/services/gateway/internal/rest"
 )
 
-func NewCreateHandler(client token.TokenServiceClient, logger *zap.Logger) rest.Handler {
+func CreateHandler(client token.TokenServiceClient, logger *zap.Logger) rest.Handler {
 	type request struct {
 		Email    string `json:"email"`
 		Password string `json:"password"`
@@ -24,7 +24,7 @@ func NewCreateHandler(client token.TokenServiceClient, logger *zap.Logger) rest.
 
 	return rest.Handler{
 		Route: func(r *mux.Route) {
-			r.Path("/auth/token").Methods(http.MethodPost)
+			r.Path("/api/auth/token").Methods(http.MethodPost)
 		},
 		Action: func(res rest.Responder, req *rest.Request) {
 			var request request

@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/nickbryan/collectable/services/gateway/internal/rest/health"
+	"os"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -27,7 +29,8 @@ var serverCmd = &cobra.Command{
 			return fmt.Errorf("unable to initialise logger: %w", err)
 		}
 
-		conn, err := grpc.Dial("0.0.0.0:8081", grpc.WithTransportCredentials(insecure.NewCredentials()))
+		target := fmt.Sprintf("%s:%s", os.Getenv("IAM_SERVICE_HOST"), os.Getenv("IAM_SERVICE_PORT"))
+		conn, err := grpc.Dial(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
 			return fmt.Errorf("unable to dial token server: %w", err)
 		}
@@ -42,7 +45,10 @@ var serverCmd = &cobra.Command{
 
 		svr := rest.NewServer(logger)
 
-		svr.RegisterHandlers(token.NewCreateHandler(tokenClient, logger))
+		svr.RegisterHandlers(
+			health.CheckHandler(),
+			token.CreateHandler(tokenClient, logger),
+		)
 
 		return svr.Start("0.0.0.0:8080")
 	},

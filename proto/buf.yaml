@@ -1,5 +1,5 @@
 version: v1
-name: buf.build/nickbryan/collectable
+name: buf.deploy/nickbryan/collectable
 breaking:
   use:
     - FILE

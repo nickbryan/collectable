@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"google.golang.org/grpc/health"
+	"google.golang.org/grpc/health/grpc_health_v1"
 	"net"
 
 	"github.com/spf13/cobra"
@@ -34,6 +36,7 @@ var serverCmd = &cobra.Command{
 
 		server := grpc.NewServer()
 
+		grpc_health_v1.RegisterHealthServer(server, health.NewServer())
 		tokenService.RegisterTokenServiceServer(server, token.NewTokenService())
 
 		return server.Serve(lis)
