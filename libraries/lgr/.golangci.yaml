@@ -1,5 +1,8 @@
 output:
   sort-results: true
+inters-settings:
+  goimports:
+    local-prefixes: github.com/nickbryan/collectable
 linters:
   disable-all: true
   enable:
@@ -29,7 +32,6 @@ linters:
     - forbidigo
     - forcetypeassert
     - funlen
-    - gci
     - gochecknoglobals
     - gochecknoinits
     - gocognit

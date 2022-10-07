@@ -22,8 +22,8 @@ lint-fix:
     WORKDIR /lgr
     COPY . .
     RUN go mod download
-    RUN golangci-lint run
-    SAVE ARTIFACT . AS LOCAL .
+    RUN golangci-lint run --fix || exit 0
+    SAVE ARTIFACT ./* AS LOCAL .
 
 unit-test:
     FROM +deps
