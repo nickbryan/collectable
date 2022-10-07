@@ -2,8 +2,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/nickbryan/collectable/services/gateway/internal/rest/health"
 	"os"
+
+	"github.com/nickbryan/collectable/services/gateway/internal/rest/health"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -26,18 +27,18 @@ var serverCmd = &cobra.Command{
 	RunE: func(_ *cobra.Command, _ []string) (err error) {
 		logger, err := zap.NewProduction()
 		if err != nil {
-			return fmt.Errorf("unable to initialise logger: %w", err)
+			return fmt.Errorf("initialising logger: %w", err)
 		}
 
 		target := fmt.Sprintf("%s:%s", os.Getenv("IAM_SERVICE_HOST"), os.Getenv("IAM_SERVICE_PORT"))
 		conn, err := grpc.Dial(target, grpc.WithTransportCredentials(insecure.NewCredentials()))
 		if err != nil {
-			return fmt.Errorf("unable to dial token server: %w", err)
+			return fmt.Errorf("dialing token server: %w", err)
 		}
 		defer func(conn *grpc.ClientConn) {
 			err = conn.Close()
 			if err != nil {
-				err = fmt.Errorf("error closing grpc token server connection: %w", err)
+				err = fmt.Errorf("closing grpc token server connection: %w", err)
 			}
 		}(conn)
 

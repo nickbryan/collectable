@@ -1,8 +1,0 @@
-go 1.18
-
-use (
-	./libraries/up
-	./proto
-	./services/gateway
-	./services/iam
-)

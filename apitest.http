@@ -7,3 +7,14 @@ Content-Type: application/json
 }
 
 ###
+
+POST http://localhost:80/api/auth/identity
+Content-Type: application/json
+
+{
+  "email": "test@example.org",
+  "password": "testpassword123!",
+  "passwordConfirmation": "testpassword123!"
+}
+
+###

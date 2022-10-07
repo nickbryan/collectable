@@ -9,11 +9,15 @@ import (
 	"google.golang.org/grpc/status"
 
 	"github.com/nickbryan/collectable/libraries/up/jwt"
-	token "github.com/nickbryan/collectable/proto/iam/token/service/v1"
+	"github.com/nickbryan/collectable/proto/iam/token/service/v1"
 )
 
 type Service struct {
 	token.UnimplementedTokenServiceServer
+}
+
+func NewService() *Service {
+	return &Service{}
 }
 
 func (s Service) CreateToken(ctx context.Context, request *token.CreateTokenRequest) (*token.CreateTokenResponse, error) {
@@ -32,8 +36,4 @@ func (s Service) CreateToken(ctx context.Context, request *token.CreateTokenRequ
 	}
 
 	return &token.CreateTokenResponse{Token: tkn}, nil
-}
-
-func NewTokenService() token.TokenServiceServer {
-	return &Service{}
 }

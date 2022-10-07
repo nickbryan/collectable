@@ -1,5 +1,6 @@
 ROOT_DIR:=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
-MIGRATE_COMMAND:=docker run -v $(ROOT_DIR)/assets/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgresql://collect_user:collect_secret@localhost:31317/iam?sslmode=disable
+MIGRATE_COMMAND:=docker run -v $(ROOT_DIR)/internal/database/postgresql/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database postgresql://collectable_admin:collectable_admin_password@localhost:5432/iam?sslmode=disable
+SQLC_COMMAND:=docker run -v $(ROOT_DIR):/src -w /src --network host kjconroy/sqlc
 
 run:
 	@go run main.go
@@ -14,3 +15,5 @@ migrate:
 	@ $(MIGRATE_COMMAND) up
 migrate-down:
 	@ $(MIGRATE_COMMAND) down -all
+sqlc-generate:
+	@ $(SQLC_COMMAND) generate

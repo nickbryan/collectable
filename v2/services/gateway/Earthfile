@@ -1,0 +1,25 @@
+VERSION 0.6
+FROM golang:1.19-alpine
+WORKDIR /gateway
+
+ENV CGO_ENABLED=0
+
+deps:
+    COPY go.mod go.sum .
+    RUN go mod download
+    SAVE ARTIFACT go.mod AS LOCAL go.mod
+    SAVE ARTIFACT go.sum AS LOCAL go.sum
+
+build:
+    FROM +deps
+    COPY . .
+    RUN go build -o build/gateway main.go
+    SAVE ARTIFACT build/gateway /gateway
+
+docker:
+    FROM scratch
+    COPY +build/gateway .
+    ENTRYPOINT ["/gateway/gateway"]
+    SAVE IMAGE gateway:latest
+
+

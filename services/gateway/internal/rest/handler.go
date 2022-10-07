@@ -59,7 +59,7 @@ type Request struct {
 func (r Request) Decode(dest interface{}) error {
 	err := json.NewDecoder(r.Body).Decode(dest)
 	if err != nil {
-		return fmt.Errorf("unable to decode request: %w", err)
+		return fmt.Errorf("decoding request as json: %w", err)
 	}
 
 	return nil

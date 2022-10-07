@@ -1,0 +1,36 @@
+VERSION 0.6
+FROM golang:1.19-alpine
+WORKDIR /lgr
+
+ENV CGO_ENABLED=0
+
+deps:
+    COPY go.mod go.sum .
+    RUN go mod download
+    SAVE ARTIFACT go.mod AS LOCAL go.mod
+    SAVE ARTIFACT go.sum AS LOCAL go.sum
+
+lint:
+    FROM golangci/golangci-lint:latest
+    WORKDIR /lgr
+    COPY . .
+    RUN go mod download
+    RUN golangci-lint run
+
+lint-fix:
+    FROM golangci/golangci-lint:latest
+    WORKDIR /lgr
+    COPY . .
+    RUN go mod download
+    RUN golangci-lint run
+    SAVE ARTIFACT . AS LOCAL .
+
+unit-test:
+    FROM +deps
+    COPY . .
+    RUN go test github.com/nickbryan/collectable/libraries/lgr
+
+test:
+    BUILD +deps
+    BUILD +lint
+    BUILD +unit-test

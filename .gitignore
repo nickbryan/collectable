@@ -2,3 +2,4 @@
 .dcignore
 .terraform*
 terraform.*
+.DS_Store

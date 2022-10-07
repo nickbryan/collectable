@@ -1,0 +1,18 @@
+syntax = "proto3";
+package proto.iam.identity.service.v1;
+
+option go_package = "github.com/nickbryan/collectable/proto/iam/identity/service/v1;identity";
+
+message CreateIdentityRequest {
+  string email = 1;
+  string password = 2;
+  string password_confirmation = 3;
+}
+
+message CreateIdentityResponse {
+  string id = 1;
+}
+
+service IdentityService {
+  rpc CreateIdentity(CreateIdentityRequest) returns (CreateIdentityResponse) {}
+}
