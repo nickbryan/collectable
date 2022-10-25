@@ -1,3 +1,4 @@
+// Package lgrtest exposes an adapter that can be used to assert what logs have been written during a test run.
 package lgrtest
 
 import (
@@ -10,7 +11,9 @@ import (
 // within the returned Entries object. This logger can be a direct replacement for an application
 // logger so logs can be asserted when writing automated tests.
 func New() (*lgr.Logger, *Entries) {
-	e := &Entries{}
+	e := &Entries{
+		entries: []Entry{},
+	}
 
 	return lgr.FromAdapter(testAdapter{entries: e}), e
 }
@@ -73,7 +76,7 @@ type TestingT interface {
 //	each expectedFields Type must match the Type of the matching entry Field
 //	each expectedFields Value must match the Value of the matching entry Field
 func AssertFullEntry(
-	t TestingT,
+	t TestingT, //nolint: varnamelen // t is descriptive of the type.
 	entry Entry,
 	expectedLevel lgr.Level,
 	expectedMessage string,

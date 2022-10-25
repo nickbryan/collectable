@@ -1,6 +1,8 @@
+// Package lgr exposes a wrapper around an underlying logger to provide vendor agnostic logging capabilities.
 package lgr
 
 import (
+	"fmt"
 	"time"
 )
 
@@ -78,7 +80,10 @@ func WithTimestampFactory(factory TimestampFactoryFunc) Option {
 // Logger.
 func New(opts ...Option) (*Logger, error) {
 	logger := FromAdapter(nil, opts...)
-	bindZerologAdapter(logger)
+
+	if err := bindZerologAdapter(logger); err != nil {
+		return nil, fmt.Errorf("binding log adapter: %w", err)
+	}
 
 	return logger, nil
 }
@@ -94,6 +99,7 @@ func NewNop() *Logger {
 // Passing nil as the adapter will have the same effect as NewNop.
 func FromAdapter(adapter Adapter, opts ...Option) *Logger {
 	logger := &Logger{
+		adapter:          nil,
 		outputPath:       "stderr",
 		minLevel:         DebugLevel,
 		timestampFactory: time.Now,

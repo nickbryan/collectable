@@ -13,23 +13,32 @@ type zerologAdapter struct {
 	logger zerolog.Logger
 }
 
-func bindZerologAdapter(l *Logger) {
+func bindZerologAdapter(logger *Logger) error {
 	var output io.Writer
 
-	switch l.outputPath {
+	switch logger.outputPath {
 	case "stdout":
 		output = os.Stdout
 	case "stderr":
 		output = os.Stderr
 	default:
-		os.OpenFile(l.outputPath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, 0666)
+		const ownerRWOnly = 0x600
+
+		f, err := os.OpenFile(logger.outputPath, os.O_WRONLY|os.O_APPEND|os.O_CREATE, ownerRWOnly)
+		if err != nil {
+			return fmt.Errorf("opening output path file: %w", err)
+		}
+
+		output = f
 	}
 
 	zerolog.TimestampFieldName = "timestamp"
-	zerolog.TimestampFunc = l.timestampFactory
-	logger := zerolog.New(output).Level(toZerologLevel(l.minLevel)).With().Timestamp().Logger()
+	zerolog.TimestampFunc = logger.timestampFactory
+	zlogger := zerolog.New(output).Level(toZerologLevel(logger.minLevel)).With().Timestamp().Logger()
 
-	l.adapter = zerologAdapter{logger: logger}
+	logger.adapter = zerologAdapter{logger: zlogger}
+
+	return nil
 }
 
 func (z zerologAdapter) Adapt(level Level, message string, fields ...Field) {
@@ -52,6 +61,7 @@ func (z zerologAdapter) Adapt(level Level, message string, fields ...Field) {
 
 	event.Msg(message)
 }
+
 func fieldsToContext(fields []Field) *zerolog.Event { //nolint: cyclop,funlen // Easier to read whole type switch.
 	event := zerolog.Dict()
 
